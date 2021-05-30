@@ -51,6 +51,7 @@ body {
   margin-top: 10px;
   user-select: none;
   cursor: auto;
+  visibility: hidden;
 }
 
 .game_field {

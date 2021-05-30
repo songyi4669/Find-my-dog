@@ -2,20 +2,57 @@
 
 const DOG_SIZE = 145;
 
+const MYDOG_COUNT = 1;
+const DOG_COUNT = 3;
+
 const field = document.querySelector('.game_field');
 const fieldRect = field.getBoundingClientRect();
 
-function initGame() {
-    addItem('mydog', 1, './img/dog9.png');
-    addItem('dog1', 3, './img/dog1.png');
-    addItem('dog2', 3, './img/dog2.png');
-    addItem('dog3', 3, './img/dog3.png');
-    addItem('dog4', 3, './img/dog4.png');
-    addItem('dog5', 3, './img/dog5.png');
-    addItem('dog6', 3, './img/dog6.png');
-    addItem('dog7', 3, './img/dog7.png');
-    addItem('dog8', 3, './img/dog8.png');
+const gameBtn = document.querySelector('.game_button');
+const gameTimer = document.querySelector('.game_timer');
+
+let started = false;
+let timer = undefined;
+
+gameBtn.addEventListener('click', () => {
+    if (started) {
+        stopGame();
+    } else {
+        startGame();
+    }
+    started = !started;
+});
+
+function startGame() {
+    initGame();
+    showStopButton();
+    showTimer();
 }
+
+function showTimer() {
+    gameTimer.style.visibility = 'visible';
+}
+
+function showStopButton() {
+    const icon = gameBtn.querySelector('.fa-play');
+    icon.classList.add('fa-stop');
+    icon.classList.remove('fa-play');
+}
+
+
+function initGame() {
+    field.innerHTML = '';
+    addItem('mydog', MYDOG_COUNT, './img/dog9.png');
+    addItem('dog1', DOG_COUNT, './img/dog1.png');
+    addItem('dog2', DOG_COUNT, './img/dog2.png');
+    addItem('dog3', DOG_COUNT, './img/dog3.png');
+    addItem('dog4', DOG_COUNT, './img/dog4.png');
+    addItem('dog5', DOG_COUNT, './img/dog5.png');
+    addItem('dog6', DOG_COUNT, './img/dog6.png');
+    addItem('dog7', DOG_COUNT, './img/dog7.png');
+    addItem('dog8', DOG_COUNT, './img/dog8.png');
+}
+
 
 function addItem(className, count, imgPath) {
     const x1 = 0;
