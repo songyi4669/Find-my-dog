@@ -12,24 +12,46 @@ const fieldRect = field.getBoundingClientRect();
 
 const gameBtn = document.querySelector('.game_button');
 const gameTimer = document.querySelector('.game_timer');
+const popUp = document.querySelector('.pop-up');
+const popUpText = document.querySelector('.pop-up_message');
+const popUpRefresh = document.querySelector('.pop-up_refresh');
 
 let started = false;
 let timer = undefined;
 
+field.addEventListener('click', onFieldClick);
 gameBtn.addEventListener('click', () => {
     if (started) {
         stopGame();
     } else {
         startGame();
     }
-    started = !started;
+});
+
+popUpRefresh.addEventListener('click', () => {
+    startGame();
+    hidePopUp();
 });
 
 function startGame() {
+    started = true;
     initGame();
     showStopButton();
     showTimer();
     startGameTimer();
+}
+
+function stopGame() {
+    started = false;
+    stopGameTimer();
+    hideGameButton();
+    showPopUpWithText('Replay❓');
+}
+
+function finishGame(win) {
+    started = false;
+    hideGameButton();
+    showPopUpWithText(win ? '강아지를 찾았어!🐶💓' : '강아지를 찾아줘😭');
 }
 
 function startGameTimer() {
@@ -38,11 +60,17 @@ function startGameTimer() {
     timer = setInterval(() => {
         if (remainingTimeSec <= 0) {
             clearInterval(timer);
+            finishGame();
             return;
         }
         updateTimerText(--remainingTimeSec);
     }, 1000);
 }
+
+function stopGameTimer() {
+    clearInterval(timer);
+}
+
 
 function updateTimerText(time) {
     const minutes = Math.floor(time / 60);
@@ -55,25 +83,51 @@ function showTimer() {
 }
 
 function showStopButton() {
-    const icon = gameBtn.querySelector('.fa-play');
+    const icon = gameBtn.querySelector('.fas');
     icon.classList.add('fa-stop');
     icon.classList.remove('fa-play');
 }
 
+function showPopUpWithText(text) {
+    popUpText.innerHTML = text;
+    popUp.classList.remove('pop-up--hide');
+}
+
+function hidePopUp() {
+    popUp.classList.add('pop-up--hide');
+}
+
+function hideGameButton() {
+   gameBtn.style.visibility = 'hidden';
+}
 
 function initGame() {
     field.innerHTML = '';
     addItem('mydog', MYDOG_COUNT, './img/dog9.png');
-    addItem('dog1', DOG_COUNT, './img/dog1.png');
-    addItem('dog2', DOG_COUNT, './img/dog2.png');
-    addItem('dog3', DOG_COUNT, './img/dog3.png');
-    addItem('dog4', DOG_COUNT, './img/dog4.png');
-    addItem('dog5', DOG_COUNT, './img/dog5.png');
-    addItem('dog6', DOG_COUNT, './img/dog6.png');
-    addItem('dog7', DOG_COUNT, './img/dog7.png');
-    addItem('dog8', DOG_COUNT, './img/dog8.png');
+    addItem('dog', DOG_COUNT, './img/dog1.png');
+    addItem('dog', DOG_COUNT, './img/dog2.png');
+    addItem('dog', DOG_COUNT, './img/dog3.png');
+    addItem('dog', DOG_COUNT, './img/dog4.png');
+    addItem('dog', DOG_COUNT, './img/dog5.png');
+    addItem('dog', DOG_COUNT, './img/dog6.png');
+    addItem('dog', DOG_COUNT, './img/dog7.png');
+    addItem('dog', DOG_COUNT, './img/dog8.png');
 }
 
+function onFieldClick(event) {
+    if (!started) {
+        return;
+    }
+    const target = event.target;
+    if (target.matches('.mydog')) {
+        target.remove();
+        stopGameTimer();
+        finishGame(true);
+    } else if (target.matches('.dog')) {
+        stopGameTimer();
+        finishGame(false);
+    }
+}
 
 function addItem(className, count, imgPath) {
     const x1 = 0;
@@ -96,5 +150,3 @@ function addItem(className, count, imgPath) {
 function randomNumber(min, max) {
     return Math.random() * (max - min) + min;
 }
-
-initGame();
