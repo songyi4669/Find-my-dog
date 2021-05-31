@@ -5,6 +5,8 @@ const DOG_SIZE = 145;
 const MYDOG_COUNT = 1;
 const DOG_COUNT = 3;
 
+const GAME_DURATION_SEC = 5;
+
 const field = document.querySelector('.game_field');
 const fieldRect = field.getBoundingClientRect();
 
@@ -27,6 +29,25 @@ function startGame() {
     initGame();
     showStopButton();
     showTimer();
+    startGameTimer();
+}
+
+function startGameTimer() {
+    let remainingTimeSec = GAME_DURATION_SEC;
+    updateTimerText(remainingTimeSec);
+    timer = setInterval(() => {
+        if (remainingTimeSec <= 0) {
+            clearInterval(timer);
+            return;
+        }
+        updateTimerText(--remainingTimeSec);
+    }, 1000);
+}
+
+function updateTimerText(time) {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    gameTimer.innerText = `${minutes}:${seconds}`;
 }
 
 function showTimer() {
