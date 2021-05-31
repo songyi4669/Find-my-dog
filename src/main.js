@@ -16,6 +16,11 @@ const popUp = document.querySelector('.pop-up');
 const popUpText = document.querySelector('.pop-up_message');
 const popUpRefresh = document.querySelector('.pop-up_refresh');
 
+const winSound = new Audio('./sound/win.mp3');
+const lostSound = new Audio('./sound/lost.mp3');
+const bgSound = new Audio('./sound/bg.mp3');
+const cancelSound = new Audio('./sound/cancel.mp3');
+
 let started = false;
 let timer = undefined;
 
@@ -39,6 +44,7 @@ function startGame() {
     showStopButton();
     showTimer();
     startGameTimer();
+    playSound(bgSound);
 }
 
 function stopGame() {
@@ -46,11 +52,20 @@ function stopGame() {
     stopGameTimer();
     hideGameButton();
     showPopUpWithText('Replay❓');
+    playSound(cancelSound);
+    stopSound(bgSound);
 }
 
 function finishGame(win) {
     started = false;
     hideGameButton();
+    if (win) {
+        playSound(winSound);
+    } else {
+        playSound(lostSound);
+    }
+    stopGameTimer();
+    stopSound(bgSound);
     showPopUpWithText(win ? '강아지를 찾았어!🐶💓' : '강아지를 찾아줘😭');
 }
 
@@ -121,10 +136,8 @@ function onFieldClick(event) {
     const target = event.target;
     if (target.matches('.mydog')) {
         target.remove();
-        stopGameTimer();
         finishGame(true);
     } else if (target.matches('.dog')) {
-        stopGameTimer();
         finishGame(false);
     }
 }
@@ -149,4 +162,13 @@ function addItem(className, count, imgPath) {
 
 function randomNumber(min, max) {
     return Math.random() * (max - min) + min;
+}
+
+function playSound(sound) {
+    sound.currentTime = 0;
+    sound.play();
+}
+
+function stopSound(sound) {
+    sound.pause();
 }
