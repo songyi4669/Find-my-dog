@@ -101,3 +101,14 @@ body {
   font-size: 48px;
   margin-top: 10px;
 }
+
+.mydog,
+.dog {
+  cursor: pointer;
+  transition: transform 100ms ease-in;
+}
+
+.mydog:hover,
+.dog:hover {
+  transform: scale(1.1);
+}
