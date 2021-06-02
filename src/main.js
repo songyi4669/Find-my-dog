@@ -1,6 +1,7 @@
 'use strict';
 
 import PopUp from "./popup.js";
+import Field from "./field.js";
 
 const DOG_SIZE = 145;
 
@@ -8,9 +9,6 @@ const MYDOG_COUNT = 1;
 const DOG_COUNT = 3;
 
 const GAME_DURATION_SEC = 5;
-
-const field = document.querySelector('.game_field');
-const fieldRect = field.getBoundingClientRect();
 
 const gameBtn = document.querySelector('.game_button');
 const gameTimer = document.querySelector('.game_timer');
@@ -28,7 +26,20 @@ gameFinishBanner.setClickListener(() => {
     startGame();
 });
 
-field.addEventListener('click', onFieldClick);
+const gameField = new Field(MYDOG_COUNT, DOG_COUNT);
+gameField.setClickListener(onItemClick);
+
+function onItemClick(item) {
+    if (!started) {
+        return;
+    }
+    if (item === 'mydog') {
+        finishGame(true);
+    } else if (item === 'dog') {
+        finishGame(false);
+    }
+}
+
 gameBtn.addEventListener('click', () => {
     if (started) {
         stopGame();
@@ -108,51 +119,7 @@ function hideGameButton() {
 }
 
 function initGame() {
-    field.innerHTML = '';
-    addItem('mydog', MYDOG_COUNT, './img/dog9.png');
-    addItem('dog', DOG_COUNT, './img/dog1.png');
-    addItem('dog', DOG_COUNT, './img/dog2.png');
-    addItem('dog', DOG_COUNT, './img/dog3.png');
-    addItem('dog', DOG_COUNT, './img/dog4.png');
-    addItem('dog', DOG_COUNT, './img/dog5.png');
-    addItem('dog', DOG_COUNT, './img/dog6.png');
-    addItem('dog', DOG_COUNT, './img/dog7.png');
-    addItem('dog', DOG_COUNT, './img/dog8.png');
-}
-
-function onFieldClick(event) {
-    if (!started) {
-        return;
-    }
-    const target = event.target;
-    if (target.matches('.mydog')) {
-        target.remove();
-        finishGame(true);
-    } else if (target.matches('.dog')) {
-        finishGame(false);
-    }
-}
-
-function addItem(className, count, imgPath) {
-    const x1 = 0;
-    const y1 = 0;
-    const x2 = fieldRect.width - DOG_SIZE;
-    const y2 = fieldRect.height - DOG_SIZE;
-    for (let i = 0; i < count; i++){
-        const item = document.createElement('img');
-        item.setAttribute('class', className);
-        item.setAttribute('src', imgPath);
-        item.style.position = 'absolute';
-        const x = randomNumber(x1, x2);
-        const y = randomNumber(y1, y2);
-        item.style.left = `${x}px`;
-        item.style.top = `${y}px`;
-        field.appendChild(item);
-    }
-}
-
-function randomNumber(min, max) {
-    return Math.random() * (max - min) + min;
+    gameField.init();
 }
 
 function playSound(sound) {
