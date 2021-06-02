@@ -1,5 +1,7 @@
 'use strict';
 
+import PopUp from "./popup.js";
+
 const DOG_SIZE = 145;
 
 const MYDOG_COUNT = 1;
@@ -12,9 +14,6 @@ const fieldRect = field.getBoundingClientRect();
 
 const gameBtn = document.querySelector('.game_button');
 const gameTimer = document.querySelector('.game_timer');
-const popUp = document.querySelector('.pop-up');
-const popUpText = document.querySelector('.pop-up_message');
-const popUpRefresh = document.querySelector('.pop-up_refresh');
 
 const winSound = new Audio('./sound/win.mp3');
 const lostSound = new Audio('./sound/lost.mp3');
@@ -24,6 +23,11 @@ const cancelSound = new Audio('./sound/cancel.mp3');
 let started = false;
 let timer = undefined;
 
+const gameFinishBanner = new PopUp();
+gameFinishBanner.setClickListener(() => {
+    startGame();
+});
+
 field.addEventListener('click', onFieldClick);
 gameBtn.addEventListener('click', () => {
     if (started) {
@@ -31,11 +35,6 @@ gameBtn.addEventListener('click', () => {
     } else {
         startGame();
     }
-});
-
-popUpRefresh.addEventListener('click', () => {
-    startGame();
-    hidePopUp();
 });
 
 function startGame() {
@@ -51,7 +50,7 @@ function stopGame() {
     started = false;
     stopGameTimer();
     hideGameButton();
-    showPopUpWithText('Replay❓');
+    gameFinishBanner.showWithText('Replay❓');
     playSound(cancelSound);
     stopSound(bgSound);
 }
@@ -66,7 +65,7 @@ function finishGame(win) {
     }
     stopGameTimer();
     stopSound(bgSound);
-    showPopUpWithText(win ? '강아지를 찾았어!🐶💓' : '강아지를 찾아줘😭');
+    gameFinishBanner.showWithText(win ? '강아지를 찾았어!🐶💓' : '강아지를 찾아줘😭');
 }
 
 function startGameTimer() {
@@ -102,15 +101,6 @@ function showStopButton() {
     icon.classList.add('fa-stop');
     icon.classList.remove('fa-play');
     gameBtn.style.visibility = 'visible';
-}
-
-function showPopUpWithText(text) {
-    popUpText.innerHTML = text;
-    popUp.classList.remove('pop-up--hide');
-}
-
-function hidePopUp() {
-    popUp.classList.add('pop-up--hide');
 }
 
 function hideGameButton() {
