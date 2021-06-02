@@ -2,8 +2,7 @@
 
 import PopUp from "./popup.js";
 import Field from "./field.js";
-
-const DOG_SIZE = 145;
+import * as sound from "./sound.js";
 
 const MYDOG_COUNT = 1;
 const DOG_COUNT = 3;
@@ -12,11 +11,6 @@ const GAME_DURATION_SEC = 5;
 
 const gameBtn = document.querySelector('.game_button');
 const gameTimer = document.querySelector('.game_timer');
-
-const winSound = new Audio('./sound/win.mp3');
-const lostSound = new Audio('./sound/lost.mp3');
-const bgSound = new Audio('./sound/bg.mp3');
-const cancelSound = new Audio('./sound/cancel.mp3');
 
 let started = false;
 let timer = undefined;
@@ -54,7 +48,7 @@ function startGame() {
     showStopButton();
     showTimer();
     startGameTimer();
-    playSound(bgSound);
+    sound.playBackground();
 }
 
 function stopGame() {
@@ -62,20 +56,20 @@ function stopGame() {
     stopGameTimer();
     hideGameButton();
     gameFinishBanner.showWithText('Replay❓');
-    playSound(cancelSound);
-    stopSound(bgSound);
+    sound.playCancel();
+    sound.stopBackground();
 }
 
 function finishGame(win) {
     started = false;
     hideGameButton();
     if (win) {
-        playSound(winSound);
+        sound.playWin();
     } else {
-        playSound(lostSound);
+        sound.playLost();
     }
     stopGameTimer();
-    stopSound(bgSound);
+    sound.stopBackground();
     gameFinishBanner.showWithText(win ? '강아지를 찾았어!🐶💓' : '강아지를 찾아줘😭');
 }
 
@@ -122,11 +116,3 @@ function initGame() {
     gameField.init();
 }
 
-function playSound(sound) {
-    sound.currentTime = 0;
-    sound.play();
-}
-
-function stopSound(sound) {
-    sound.pause();
-}
