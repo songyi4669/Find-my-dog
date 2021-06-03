@@ -2,7 +2,12 @@
 
 const DOG_SIZE = 145;
 
-export default class Field{
+export const ItemType = Object.freeze({
+    mydog: 'mydog',
+    dog: 'dog',
+});
+
+export  class Field{
     constructor(mydogCount, dogCount) {
         this.mydogCount = mydogCount;
         this.dogCount = dogCount;
@@ -50,9 +55,9 @@ export default class Field{
      const target = event.target;
      if (target.matches('.mydog')) {
          target.remove();
-         this.onItemClick && this.onItemClick('mydog');
+         this.onItemClick && this.onItemClick(ItemType.mydog);
      } else if (target.matches('.dog')) {
-         this.onItemClick && this.onItemClick('dog');
+         this.onItemClick && this.onItemClick(ItemType.dog);
     }
     };
 }
