@@ -32,3 +32,6 @@ https://doggame.netlify.app
 
 ### 3. CANCEL 🚧
 - 게임 중에 중지 버튼을 클릭하면 게임 중지   
+
+## 추가 기능
+
